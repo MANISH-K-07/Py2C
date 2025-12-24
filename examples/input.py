@@ -1,7 +1,8 @@
 x = 0
-y = 10
+y = 100
+z = 5
 
-for i in range(0, y):
+for i in range(0, 10):
     x = x + i
 
-z = x * 2
+w = x * 2
