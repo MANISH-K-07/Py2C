@@ -1,5 +1,6 @@
 from py2c.parser import Py2CParser
 from py2c.optimizer import ConstantFolder
+from py2c.codegen import CCodeGenerator
 
 
 def main():
@@ -9,14 +10,14 @@ def main():
     parser = Py2CParser(source)
     ir = parser.parse()
 
-    print("=== Original IR ===")
-    print(ir)
-
     optimizer = ConstantFolder()
     optimized_ir = optimizer.optimize(ir)
 
-    print("\n=== Optimized IR ===")
-    print(optimized_ir)
+    codegen = CCodeGenerator()
+    c_code = codegen.generate(optimized_ir)
+
+    print("=== Generated C Code ===")
+    print(c_code)
 
 
 if __name__ == "__main__":
