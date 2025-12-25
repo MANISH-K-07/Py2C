@@ -57,7 +57,7 @@ class IRCompare(IRNode):
 
 class IRBoolOp(IRNode):
     def __init__(self, op, values):
-        self.op = op      # "and" | "or"
+        self.op = op
         self.values = values
 
     def __repr__(self):
@@ -113,7 +113,7 @@ class IRContinue(IRNode):
         return "IRContinue()"
 
 
-class IRPrint:
+class IRPrint(IRNode):
     def __init__(self, values):
         self.values = values
 
@@ -121,3 +121,31 @@ class IRPrint:
 class IRPass(IRNode):
     def __repr__(self):
         return "IRPass()"
+
+
+# ---------- Functions ----------
+class IRFunction(IRNode):
+    def __init__(self, name, params, body):
+        self.name = name
+        self.params = params  # list of IRVar
+        self.body = body      # list of IR statements
+
+    def __repr__(self):
+        return f"IRFunction({self.name}, params={self.params}, body={self.body})"
+
+
+class IRReturn(IRNode):
+    def __init__(self, value):
+        self.value = value  # IR expression
+
+    def __repr__(self):
+        return f"IRReturn({self.value})"
+
+
+class IRCall(IRNode):
+    def __init__(self, name, args):
+        self.name = name
+        self.args = args  # list of IR expressions
+
+    def __repr__(self):
+        return f"IRCall({self.name}, {self.args})"

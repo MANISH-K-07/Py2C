@@ -1,7 +1,5 @@
-x = 5
+def add(a, b):
+    return a + b
 
-if x > 0:
-    pass
-
-while x < 10:
-    pass
+x = add(2, 3)
+print(x)

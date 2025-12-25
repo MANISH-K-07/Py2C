@@ -1,6 +1,5 @@
 from py2c.ir import *
 
-
 class CCodeGenerator:
     def __init__(self):
         self.lines = []
@@ -27,8 +26,7 @@ class CCodeGenerator:
                 self._gen(stmt)
 
         elif isinstance(node, IRAssign):
-            name = node.target.name
-            expr = self._expr(node.value)
+            name, expr = node.target.name, self._expr(node.value)
             if name not in self.declared:
                 self.declared.add(name)
                 self._emit(f"int {name} = {expr};")
@@ -42,11 +40,7 @@ class CCodeGenerator:
                 init = f"int {var} = {self._expr(node.start)}"
             else:
                 init = f"{var} = {self._expr(node.start)}"
-
-            end = self._expr(node.end)
-            step = self._expr(node.step)
-
-            self._emit(f"for ({init}; {var} < {end}; {var} += {step}) {{")
+            self._emit(f"for ({init}; {var} < {self._expr(node.end)}; {var} += {self._expr(node.step)}) {{")
             self.indent += 1
             for stmt in node.body:
                 self._gen(stmt)
@@ -54,8 +48,7 @@ class CCodeGenerator:
             self._emit("}")
 
         elif isinstance(node, IRWhile):
-            cond = self._expr(node.condition)
-            self._emit(f"while {cond} {{")
+            self._emit(f"while ({self._expr(node.condition)}) {{")
             self.indent += 1
             for stmt in node.body:
                 self._gen(stmt)
@@ -72,35 +65,40 @@ class CCodeGenerator:
             self._emit("continue;")
 
         elif isinstance(node, IRPass):
-            pass  # emit nothing
+            pass
 
         elif isinstance(node, IRPrint):
-            fmt = []
-            args = []
+            fmt = " ".join("%d" for _ in node.values) + "\\n"
+            args = ", ".join(self._expr(v) for v in node.values)
+            self._emit(f'printf("{fmt}", {args});' if args else f'printf("\\n");')
 
-            for v in node.values:
-                fmt.append("%d")
-                args.append(self._expr(v))
+        # ---------- Functions / Return ----------
+        elif isinstance(node, IRFunction):
+            params_str = ", ".join(f"int {p.name}" for p in node.params)
+            self._emit(f"int {node.name}({params_str}) {{")
+            self.indent += 1
+            for stmt in node.body:
+                self._gen(stmt)
+            self.indent -= 1
+            self._emit("}")
 
-            fmt_str = " ".join(fmt) + "\\n"
+        elif isinstance(node, IRReturn):
+            self._emit(f"return {self._expr(node.value)};")
 
-            if args:
-                self._emit(f'printf("{fmt_str}", {", ".join(args)});')
-            else:
-                self._emit('printf("\\n");')
+        elif isinstance(node, IRCall):
+            args_str = ", ".join(self._expr(arg) for arg in node.args)
+            return f"{node.name}({args_str})"
 
         else:
             raise NotImplementedError(f"Codegen not implemented for {type(node)}")
 
     def _gen_if(self, node):
-        cond = self._expr(node.condition)
-        self._emit(f"if {cond} {{")
+        self._emit(f"if ({self._expr(node.condition)}) {{")
         self.indent += 1
         for stmt in node.then_body:
             self._gen(stmt)
         self.indent -= 1
         self._emit("}")
-
         if node.else_body:
             if len(node.else_body) == 1 and isinstance(node.else_body[0], IRIf):
                 self._emit("else ")
@@ -114,32 +112,16 @@ class CCodeGenerator:
                 self._emit("}")
 
     def _expr(self, node):
-        if isinstance(node, IRConst):
-            return str(node.value)
-
-        if isinstance(node, IRVar):
-            return node.name
-
-        if isinstance(node, IRBinOp):
-            return f"({self._expr(node.left)} {self._map_op(node.op)} {self._expr(node.right)})"
-
-        if isinstance(node, IRCompare):
-            return f"({self._expr(node.left)} {node.op} {self._expr(node.right)})"
-
-        if isinstance(node, IRBoolOp):
-            op = "&&" if node.op == "and" else "||"
-            return "(" + f" {op} ".join(self._expr(v) for v in node.values) + ")"
-
-        if isinstance(node, IRNot):
-            return f"(!{self._expr(node.value)})"
-
+        if isinstance(node, IRConst): return str(node.value)
+        if isinstance(node, IRVar): return node.name
+        if isinstance(node, IRBinOp): return f"({self._expr(node.left)} {self._map_op(node.op)} {self._expr(node.right)})"
+        if isinstance(node, IRCompare): return f"({self._expr(node.left)} {node.op} {self._expr(node.right)})"
+        if isinstance(node, IRBoolOp): return "(" + f" {('&&' if node.op=='and' else '||')} ".join(self._expr(v) for v in node.values) + ")"
+        if isinstance(node, IRNot): return f"(!{self._expr(node.value)})"
+        if isinstance(node, IRCall):
+            args_str = ", ".join(self._expr(arg) for arg in node.args)
+            return f"{node.name}({args_str})"
         raise NotImplementedError(f"Expression not supported: {type(node)}")
 
     def _map_op(self, op):
-        return {
-            "Add": "+",
-            "Sub": "-",
-            "Mult": "*",
-            "Div": "/",
-            "Mod": "%"
-        }[op]
+        return {"Add": "+", "Sub": "-", "Mult": "*", "Div": "/", "Mod": "%"}[op]
