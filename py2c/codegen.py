@@ -65,6 +65,12 @@ class CCodeGenerator:
         elif isinstance(node, IRIf):
             self._gen_if(node)
 
+        elif isinstance(node, IRBreak):
+            self._emit("break;")
+
+        elif isinstance(node, IRContinue):
+            self._emit("continue;")
+
         else:
             raise NotImplementedError(f"Codegen not implemented for {type(node)}")
 

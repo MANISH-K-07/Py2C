@@ -1,6 +1,7 @@
 x = 0
-s = 0
-
-while x < 5:
-    s = s + x
+while x < 10:
     x = x + 1
+    if x == 5:
+        break
+    if x % 2 == 0:
+        continue

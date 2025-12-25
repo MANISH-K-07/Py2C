@@ -101,3 +101,13 @@ class IRIf(IRNode):
 
     def __repr__(self):
         return f"IRIf({self.condition}, then={self.then_body}, else={self.else_body})"
+
+
+class IRBreak(IRNode):
+    def __repr__(self):
+        return "IRBreak()"
+
+
+class IRContinue(IRNode):
+    def __repr__(self):
+        return "IRContinue()"

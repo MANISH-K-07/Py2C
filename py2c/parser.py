@@ -15,11 +15,13 @@ class Py2CParser:
     # ---------- STATEMENTS ----------
 
     def _parse_stmt(self, stmt):
+        # ----- Assignment -----
         if isinstance(stmt, ast.Assign):
             target = stmt.targets[0].id
             value = self._parse_expr(stmt.value)
             return IRAssign(IRVar(target), value)
 
+        # ----- For loop -----
         elif isinstance(stmt, ast.For):
             var = IRVar(stmt.target.id)
 
@@ -46,13 +48,22 @@ class Py2CParser:
             body = [self._parse_stmt(s) for s in stmt.body]
             return IRFor(var, start, end, step, body)
 
+        # ----- While loop -----
         elif isinstance(stmt, ast.While):
             condition = self._parse_expr(stmt.test)
             body = [self._parse_stmt(s) for s in stmt.body]
             return IRWhile(condition, body)
 
+        # ----- If / Elif / Else -----
         elif isinstance(stmt, ast.If):
             return self.parse_if(stmt)
+
+        # ----- Break / Continue -----
+        elif isinstance(stmt, ast.Break):
+            return IRBreak()
+
+        elif isinstance(stmt, ast.Continue):
+            return IRContinue()
 
         raise NotImplementedError(f"Unsupported statement: {type(stmt)}")
 
@@ -75,7 +86,7 @@ class Py2CParser:
                 return IRBinOp(IRConst(0), "Sub", self._parse_expr(expr.operand))
             if isinstance(expr.op, ast.Not):
                 return IRNot(self._parse_expr(expr.operand))
-            raise NotImplementedError("Unsupported unary op")
+            raise NotImplementedError("Unsupported unary operator")
 
         if isinstance(expr, ast.Compare):
             return self.parse_compare(expr)
