@@ -5,6 +5,7 @@ from py2c.ir import *
 class Py2CParser:
     def __init__(self, source_code: str):
         self.tree = ast.parse(source_code)
+        self.loop_depth = 0  # 🔹 Phase 10B: track loop nesting
 
     def parse(self):
         statements = []
@@ -42,38 +43,44 @@ class Py2CParser:
                 start = self._parse_expr(args[0])
                 end = self._parse_expr(args[1])
                 step = self._parse_expr(args[2])
+
+                # 🔹 Phase 10B: step = 0 guard
+                if isinstance(step, IRConst) and step.value == 0:
+                    raise SyntaxError("range() step cannot be zero")
             else:
                 raise NotImplementedError("Invalid range() usage")
 
+            self.loop_depth += 1
             body = [self._parse_stmt(s) for s in stmt.body]
+            self.loop_depth -= 1
+
             return IRFor(var, start, end, step, body)
 
         # ----- While loop -----
         elif isinstance(stmt, ast.While):
             condition = self._parse_expr(stmt.test)
+
+            self.loop_depth += 1
             body = [self._parse_stmt(s) for s in stmt.body]
+            self.loop_depth -= 1
+
             return IRWhile(condition, body)
 
         # ----- If / Elif / Else -----
         elif isinstance(stmt, ast.If):
             return self.parse_if(stmt)
 
-        # ----- Break / Continue -----
+        # ----- Break -----
         elif isinstance(stmt, ast.Break):
+            if self.loop_depth == 0:
+                raise SyntaxError("'break' outside loop")
             return IRBreak()
 
+        # ----- Continue -----
         elif isinstance(stmt, ast.Continue):
+            if self.loop_depth == 0:
+                raise SyntaxError("'continue' outside loop")
             return IRContinue()
-
-        # ----- Print -----
-        elif isinstance(stmt, ast.Expr):
-            if isinstance(stmt.value, ast.Call):
-                call = stmt.value
-                if isinstance(call.func, ast.Name) and call.func.id == "print":
-                    values = [self._parse_expr(arg) for arg in call.args]
-                    return IRPrint(values)
-
-            raise NotImplementedError("Only print() calls are supported")
 
         raise NotImplementedError(f"Unsupported statement: {type(stmt)}")
 

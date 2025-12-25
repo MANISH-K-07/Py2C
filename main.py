@@ -1,24 +1,29 @@
 from py2c.parser import Py2CParser
-from py2c.optimizer import ConstantFolder
-from py2c.dce import DeadCodeEliminator
 from py2c.codegen import CCodeGenerator
+import sys
 
 
 def main():
-    with open("examples/input.py") as f:
-        source = f.read()
+    try:
+        with open("examples/input.py", "r") as f:
+            source = f.read()
 
-    parser = Py2CParser(source)
-    ir = parser.parse()
+        parser = Py2CParser(source)
+        ir = parser.parse()
 
-    ir = ConstantFolder().optimize(ir)
-    #ir = DeadCodeEliminator().eliminate(ir)
+        codegen = CCodeGenerator()
+        c_code = codegen.generate(ir)
 
-    codegen = CCodeGenerator()
-    c_code = codegen.generate(ir)
+        print("=== Generated C Code ===")
+        print(c_code)
 
-    print("=== Generated C Code ===")
-    print(c_code)
+    except SyntaxError as e:
+        print(f"SyntaxError: {e}")
+        sys.exit(1)
+
+    except NotImplementedError as e:
+        print(f"NotImplementedError: {e}")
+        sys.exit(1)
 
 
 if __name__ == "__main__":
