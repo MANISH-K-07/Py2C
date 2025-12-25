@@ -71,6 +71,21 @@ class CCodeGenerator:
         elif isinstance(node, IRContinue):
             self._emit("continue;")
 
+        elif isinstance(node, IRPrint):
+            fmt = []
+            args = []
+
+            for v in node.values:
+                fmt.append("%d")
+                args.append(self._expr(v))
+
+            fmt_str = " ".join(fmt) + "\\n"
+
+            if args:
+                self._emit(f'printf("{fmt_str}", {", ".join(args)});')
+            else:
+                self._emit('printf("\\n");')
+
         else:
             raise NotImplementedError(f"Codegen not implemented for {type(node)}")
 

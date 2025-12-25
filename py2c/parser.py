@@ -65,6 +65,16 @@ class Py2CParser:
         elif isinstance(stmt, ast.Continue):
             return IRContinue()
 
+        # ----- Print -----
+        elif isinstance(stmt, ast.Expr):
+            if isinstance(stmt.value, ast.Call):
+                call = stmt.value
+                if isinstance(call.func, ast.Name) and call.func.id == "print":
+                    values = [self._parse_expr(arg) for arg in call.args]
+                    return IRPrint(values)
+
+            raise NotImplementedError("Only print() calls are supported")
+
         raise NotImplementedError(f"Unsupported statement: {type(stmt)}")
 
     # ---------- EXPRESSIONS ----------

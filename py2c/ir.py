@@ -111,3 +111,8 @@ class IRBreak(IRNode):
 class IRContinue(IRNode):
     def __repr__(self):
         return "IRContinue()"
+
+
+class IRPrint:
+    def __init__(self, values):
+        self.values = values
