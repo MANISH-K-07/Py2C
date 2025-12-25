@@ -45,6 +45,16 @@ class IRBinOp(IRNode):
         return f"IRBinOp({self.left} {self.op} {self.right})"
 
 
+class IRCompare:
+    def __init__(self, left, op, right):
+        self.left = left
+        self.op = op  # string: < > <= >= ==
+        self.right = right
+
+    def __repr__(self):
+        return f"IRCompare({self.left} {self.op} {self.right})"
+
+
 class IRFor(IRNode):
     def __init__(self, var, start, end, body):
         self.var = var
@@ -54,3 +64,13 @@ class IRFor(IRNode):
 
     def __repr__(self):
         return f"IRFor({self.var}, {self.start}, {self.end}, {self.body})"
+
+
+class IRIf:
+    def __init__(self, condition, then_body, else_body=None):
+        self.condition = condition
+        self.then_body = then_body
+        self.else_body = else_body or []
+
+    def __repr__(self):
+        return f"IRIf({self.condition}, then={self.then_body}, else={self.else_body})"

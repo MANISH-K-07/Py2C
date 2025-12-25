@@ -5,6 +5,8 @@ from py2c.ir import (
     IRVar,
     IRBinOp,
     IRFor,
+    IRIf,
+    IRCompare,
 )
 
 
@@ -32,6 +34,11 @@ class CCodeGenerator:
 
     def _emit(self, line):
         self.lines.append("    " * self.indent + line)
+
+    def _gen_condition(self, cond):
+        left = self._expr(cond.left)
+        right = self._expr(cond.right)
+        return f"{left} {cond.op} {right}"
 
     def _gen(self, node):
         if isinstance(node, IRProgram):
@@ -68,6 +75,27 @@ class CCodeGenerator:
             self.indent -= 1
             self._emit("}")
 
+        elif isinstance(node, IRIf):
+            cond = self._gen_condition(node.condition)
+            self._emit(f"if ({cond}) {{")
+            self.indent += 1
+
+            for stmt in node.then_body:
+                self._gen(stmt)
+
+            self.indent -= 1
+            self._emit("}")
+
+            if node.else_body:
+                self._emit("else {")
+                self.indent += 1
+
+                for stmt in node.else_body:
+                    self._gen(stmt)
+
+                self.indent -= 1
+                self._emit("}")
+
         else:
             raise NotImplementedError(f"Codegen not implemented for {type(node)}")
 
@@ -83,6 +111,11 @@ class CCodeGenerator:
             right = self._expr(node.right)
             op = self._map_op(node.op)
             return f"({left} {op} {right})"
+
+        if isinstance(node, IRCompare):
+            left = self._expr(node.left)
+            right = self._expr(node.right)
+            return f"{left} {node.op} {right}"
 
         raise NotImplementedError(f"Expression not supported: {type(node)}")
 

@@ -12,7 +12,7 @@ def main():
     ir = parser.parse()
 
     ir = ConstantFolder().optimize(ir)
-    ir = DeadCodeEliminator().eliminate(ir)
+    #ir = DeadCodeEliminator().eliminate(ir)
 
     codegen = CCodeGenerator()
     c_code = codegen.generate(ir)
