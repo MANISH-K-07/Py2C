@@ -82,6 +82,10 @@ class Py2CParser:
                 raise SyntaxError("'continue' outside loop")
             return IRContinue()
 
+        # ----- Pass -----
+        elif isinstance(stmt, ast.Pass):
+            return IRPass()
+
         raise NotImplementedError(f"Unsupported statement: {type(stmt)}")
 
     # ---------- EXPRESSIONS ----------

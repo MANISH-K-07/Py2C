@@ -71,6 +71,9 @@ class CCodeGenerator:
         elif isinstance(node, IRContinue):
             self._emit("continue;")
 
+        elif isinstance(node, IRPass):
+            pass  # emit nothing
+
         elif isinstance(node, IRPrint):
             fmt = []
             args = []

@@ -116,3 +116,8 @@ class IRContinue(IRNode):
 class IRPrint:
     def __init__(self, values):
         self.values = values
+
+
+class IRPass(IRNode):
+    def __repr__(self):
+        return "IRPass()"
