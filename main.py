@@ -15,7 +15,9 @@ def main():
         c_code = codegen.generate(ir)
 
         print("=== Generated C Code ===")
+        print("")
         print(c_code)
+        print("")
 
     except SyntaxError as e:
         print(f"SyntaxError: {e}")
