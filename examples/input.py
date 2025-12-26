@@ -17,12 +17,21 @@ temp = 12345  # removed by DCE
 result = add(z, 5)
 squared = square(result)
 
+# ---- If / Else Demo ----
+if result > 40:
+    flag = 1
+else:
+    flag = 0
+
 # ---- Loop Demo ----
 sum = 0
 for i in range(0, 5):
     sum = sum + i
 
-# ---- Output ----
-print(result)
-print(squared)
+# ---- Conditional Output ----
+if flag == 1:
+    print(squared)
+else:
+    print(result)
+
 print(sum)

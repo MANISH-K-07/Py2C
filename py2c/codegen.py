@@ -80,7 +80,7 @@ class CCodeGenerator:
             self._emit("}")
 
         elif isinstance(node, IRWhile):
-            self._emit(f"while ({self._expr(node.condition)}) {{")
+            self._emit(f"while {self._expr(node.condition)} {{")
             self.indent += 1
             for s in node.body:
                 self._gen(s)
@@ -88,7 +88,7 @@ class CCodeGenerator:
             self._emit("}")
 
         elif isinstance(node, IRIf):
-            self._emit(f"if ({self._expr(node.condition)}) {{")
+            self._emit(f"if {self._expr(node.condition)} {{")
             self.indent += 1
             for s in node.then_body:
                 self._gen(s)
