@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Py2C — A Minimal Python-to-C Compiler</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #0f1117;
+            --card: #161b22;
+            --text: #e6edf3;
+            --muted: #9da7b3;
+            --accent: #58a6ff;
+            --border: #30363d;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, system-ui, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        header {
+            padding: 4rem 2rem 3rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        header h1 {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: var(--muted);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        section {
+            margin-bottom: 3.5rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent);
+            padding-left: 0.75rem;
+        }
+
+        p {
+            color: var(--muted);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .card {
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: transform 0.15s ease, border-color 0.15s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .card p {
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+        }
+
+        .card a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .card a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 2rem;
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .tag {
+            display: inline-block;
+            margin-top: 0.75rem;
+            font-size: 0.75rem;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            border-radius: 999px;
+            padding: 0.2rem 0.6rem;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Py2C</h1>
+    <p>
+        A minimal Python-to-C compiler designed to demonstrate
+        compiler front-end design, intermediate representations,
+        optimization passes, and code generation.
+    </p>
+</header>
+
+<main>
+
+    <section>
+        <h2>About the Project</h2>
+        <p>
+            Py2C is an educational compiler that translates a restricted subset
+            of Python into readable, standards-compliant C code.
+            The project emphasizes clarity of design, modularity, and
+            correctness over language completeness.
+        </p>
+        <p>
+            Py2C follows a classic compiler architecture:
+            parsing → IR construction → optimization → code generation.
+        </p>
+    </section>
+
+    <section>
+        <div class="grid">
+
+            <div class="card">
+                <h3>README</h3>
+                <p>Project overview, features, architecture, and usage.</p>
+                <a href="README.md">Read README →</a>
+                <div class="tag">Getting Started</div>
+            </div>
+    </section>
+
+    <section>
+        <h2>Documentation</h2>
+        <div class="grid">
+
+            <div class="card">
+                <h3>Overview</h3>
+                <p>High-level design goals and architectural decisions.</p>
+                <a href="docs/overview.md">Open overview.md →</a>
+            </div>
+
+            <div class="card">
+                <h3>Parser</h3>
+                <p>AST parsing strategy and Python front-end design.</p>
+                <a href="docs/parser.md">Open parser.md →</a>
+            </div>
+
+            <div class="card">
+                <h3>Intermediate Representation</h3>
+                <p>IR node design, structure, and semantics.</p>
+                <a href="docs/ir.md">Open ir.md →</a>
+            </div>
+
+            <div class="card">
+                <h3>Optimizations</h3>
+                <p>Constant folding and dead code elimination.</p>
+                <a href="docs/optimizations.md">Open optimizations.md →</a>
+            </div>
+
+            <div class="card">
+                <h3>Code Generation</h3>
+                <p>Lowering IR into readable C code.</p>
+                <a href="docs/codegen.md">Open codegen.md →</a>
+            </div>
+
+            <div class="card">
+                <h3>Limitations & Future Work</h3>
+                <p>Design trade-offs and extension roadmap.</p>
+                <a href="docs/limitations-and-future-work.md">Open future work →</a>
+                <div class="tag">Research-Oriented</div>
+            </div>
+
+        </div>
+    </section>
+
+    <section>
+        <h2>Academic Focus</h2>
+        <p>
+            Py2C is designed as a systems and compiler engineering project,
+            suitable for graduate-level coursework, research exploration,
+            and MS/MEng program evaluation.
+        </p>
+        <p>
+            The project demonstrates understanding of:
+            parsing, IR design, optimization passes, control flow,
+            and backend code generation.
+        </p>
+    </section>
+
+</main>
+
+<footer>
+    Built as a compiler engineering project · Python → IR → C
+</footer>
+
+</body>
+</html>
