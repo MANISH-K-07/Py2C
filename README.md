@@ -3,7 +3,7 @@
 ![Domain](https://img.shields.io/badge/Domain-Compilers%20%26%20Systems-orange)
 ![Status](https://img.shields.io/badge/Status-Stable-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
-[![GitHub Pages](https://img.shields.io/badge/demo-GitHub%20Pages-brightgreen)](https://manish-k-07.github.io/NodeSync/)
+[![GitHub Pages](https://img.shields.io/badge/demo-GitHub%20Pages-brightgreen)](https://manish-k-07.github.io/Py2C/)
 
 
 # Py2C — A Minimal Python-to-C Compiler
