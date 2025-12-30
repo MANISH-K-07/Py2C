@@ -1,12 +1,11 @@
+# Py2C — A Minimal Python-to-C Compiler
+
 ![Language](https://img.shields.io/badge/Language-Python-blue)
 ![Output](https://img.shields.io/badge/Output-C-green)
 ![Domain](https://img.shields.io/badge/Domain-Compilers%20%26%20Systems-orange)
 ![Status](https://img.shields.io/badge/Status-Stable-brightgreen)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
 [![GitHub Pages](https://img.shields.io/badge/demo-GitHub%20Pages-brightgreen)](https://manish-k-07.github.io/Py2C/)
-
-
-# Py2C — A Minimal Python-to-C Compiler
 
 Py2C is an educational compiler project that translates a **well-defined subset of Python** into **readable, idiomatic C code**. The goal of this project is not full Python compatibility, but to demonstrate **core compiler concepts** end‑to‑end: parsing, IR construction, optimization, dead‑code elimination, and code generation.
 
